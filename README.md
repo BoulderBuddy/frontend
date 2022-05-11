@@ -1,3 +1,12 @@
+# Prerequisites
+
+[nvm](https://github.com/nvm-sh/nvm)
+Make
+
+# Install pre-commit hooks
+
+`make pre-commit`
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
