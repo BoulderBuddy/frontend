@@ -1,0 +1,11 @@
+semi: false
+singleQuote: true
+svelteSortOrder: 'options-scripts-markup-styles'
+svelteStrictMode: false
+svelteIndentScriptAndStyle: true
+trailingComma: 'none'
+tabWidth: 4
+overrides:
+    - files: '*.svelte'
+      options:
+          printWidth: 90
