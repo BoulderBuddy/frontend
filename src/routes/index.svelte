@@ -4,6 +4,12 @@
 
 <script lang="ts">
     import Counter from '$lib/Counter.svelte'
+    import { globalUserApi } from '$lib/api'
+
+    let number = 1
+    $: user_promise = globalUserApi.get(number)
+
+    let creator = globalUserApi.create({ email: 'user@example.com' })
 </script>
 
 <svelte:head>
@@ -24,10 +30,30 @@
     </h1>
 
     <h2>
-        try editing <strong>src/routes/index.svelte</strong>
+        {#await user_promise}
+            Wachten dan
+        {:then user}
+            Mooi man je naam is {user.first_name}
+            {user.surname}
+            <br />GDPR schending: {user.email}
+        {:catch error}
+            Gloeiende god: {error.message}
+        {/await}
     </h2>
 
-    <Counter />
+    <h2>
+        {#await creator}
+            Wachten dan
+        {:then user}
+            Mooi man je naam is {user.first_name}
+            {user.surname}
+            <br />GDPR schending: {user.email}
+        {:catch error}
+            Gloeiende god: {error.message}
+        {/await}
+    </h2>
+
+    <Counter bind:count={number} />
 </section>
 
 <style>
