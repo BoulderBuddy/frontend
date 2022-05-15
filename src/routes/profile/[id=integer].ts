@@ -1,8 +1,6 @@
 import { UserAPI } from '$lib/backend'
 import type { RequestHandler } from '@sveltejs/kit'
 
-const URI = 'users'
-
 export const get: RequestHandler = async ({ params }) => {
     //@ts-ignore
     const res = await UserAPI.get(params.id)

@@ -1,6 +1,7 @@
 import type { ExerciseParameter } from './model'
 
-export interface Exercise {
+export interface ExerciseDisplay {
+    id: number
     name: string
     parameters: ExerciseParameter[]
 }

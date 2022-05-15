@@ -23,11 +23,7 @@
     <title>Home</title>
 </svelte:head>
 
-<div>
-    {#each exercises as exercise}
-        <Exercise {exercise} />
-    {/each}
-</div>
+<div>Homepagina</div>
 
 <style>
 </style>
