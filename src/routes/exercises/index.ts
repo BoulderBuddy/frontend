@@ -10,7 +10,7 @@ export const get: RequestHandler = async ({}) => {
     const status = res.response.status
     const error = res.error
 
-    const parameters = param_res.object
+    const parameters = param_res.object as any
     const exercises = res.object as any
 
     exercises.forEach((element) => {
@@ -21,6 +21,27 @@ export const get: RequestHandler = async ({}) => {
 
     return {
         status: status,
-        body: { exercises, error }
+        body: { exercises, parameters, error }
+    }
+}
+
+export const post: RequestHandler = async ({ request }) => {
+    const data = await request.json() // or .json(), or .text(), etc
+
+    const res = await ExerciseAPI.create(data)
+    const status = res.response.status
+    const error = res.error
+    const exercise = res.object as any
+
+    //@ts-ignore
+    const param_res = await ParameterAPI.getAll()
+
+    exercise.parameters = exercise.parameter_ids.map((x) =>
+        param_res.object.find((y) => y.id == x)
+    )
+
+    return {
+        status: status,
+        body: { exercise, error }
     }
 }

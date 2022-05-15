@@ -71,6 +71,9 @@ export class BaseAPI<Model, Create, Update> {
     getAll(): Promise<APIResponse<Model[]>> {
         return api('GET', `${this.path}`)
     }
+    create(data): Promise<APIResponse<Model>> {
+        return api('POST', `${this.path}`, data)
+    }
 }
 
 export const UserAPI = new BaseAPI<User, UserCreate, UserUpdate>('users')
