@@ -2,11 +2,7 @@
     import Exercise from '$lib/Exercise.svelte'
     import type { ExerciseDisplay } from '$lib/frontend_models'
     import AddExercise from '$lib/AddExercise.svelte'
-    import Icon from '@iconify/svelte'
-    import baselineAdd from '@iconify/icons-ic/baseline-add'
-    import TestModal from '$lib/TestModal.svelte'
-    import { browser } from '$app/env'
-    import type { ExerciseCreate } from '$lib/model'
+    import { invalidate } from '$app/navigation'
 
     export const prerender = true
 </script>
@@ -16,22 +12,32 @@
     export let exercises: ExerciseDisplay[]
     let exerciseCreate = { name: null, parameter_ids: [] }
 
-    async function handleCreateEvent(event) {
-        console.log(event)
-        console.log(exerciseCreate)
-
-        const response = await fetch('/exercises', {
-            method: 'post',
+    async function handleApiCall(url, method, data?) {
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 accept: 'application/json'
             },
-            body: JSON.stringify(exerciseCreate)
+            body: data && JSON.stringify(data)
         })
-        var json = await response.json()
-        console.log(response.status)
-        console.log(json)
-        console.log(exercises)
-        exercises = [...exercises, json.exercise]
+        if (response.ok) {
+            invalidate(url)
+        }
+    }
+
+    async function handleCreateEvent(event) {
+        var data = event.detail.value
+        await handleApiCall('/exercises', 'post', data)
+    }
+
+    async function handleDelete(event) {
+        var id = event.detail.value
+        await handleApiCall('/exercises', 'delete', id)
+    }
+
+    async function handleUpdate(event) {
+        var exercise = event.detail.value
+        await handleApiCall('/exercises', 'put', exercise)
     }
 </script>
 
@@ -40,28 +46,19 @@
 </svelte:head>
 
 <div>
-    <AddExercise
-        on:create={handleCreateEvent}
-        bind:value={exerciseCreate}
-        bind:parameters
-    />
-    <!-- {#if browser}
-        <TestModal>
-            <input type="text" bind:value="">
-        </TestModal>
-    {/if}
-
-    <button
-        on:click={() => getModal().open()}
-        class="absolute bottom-0 right-0 m-4 flex justify-center items-center p-2 rounded-full bg-indigo-500 hover:bg-indigo-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
-    >
-        <Icon icon={baselineAdd} width="28" height="28" class="text-slate-100" />
-        <p class="mx-1 hidden text-slate-100  sm:block">Add Exercise</p>
-    </button> -->
+    <div class="fixed bottom-0 right-0 z-50">
+        <AddExercise
+            on:create={handleCreateEvent}
+            bind:value={exerciseCreate}
+            bind:parameters
+        />
+    </div>
 </div>
-<div class="p-6 grid grid-cols-1 gap-4 h-fit">
-    {#each exercises as exercise}
-        <Exercise {exercise} />
+<div
+    class="p-6 grid grid-cols-1 gap-4 sm:w-fit sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+>
+    {#each exercises.sort( (a, b) => a.name.localeCompare(b.name) ) as exercise (exercise.id)}
+        <Exercise on:delete={handleDelete} on:update={handleUpdate} {exercise} />
     {/each}
 </div>
 

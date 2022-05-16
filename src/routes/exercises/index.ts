@@ -28,20 +28,21 @@ export const get: RequestHandler = async ({}) => {
 export const post: RequestHandler = async ({ request }) => {
     const data = await request.json() // or .json(), or .text(), etc
 
-    const res = await ExerciseAPI.create(data)
-    const status = res.response.status
-    const error = res.error
-    const exercise = res.object as any
+    await ExerciseAPI.create(data)
+    return {}
+}
 
-    //@ts-ignore
-    const param_res = await ParameterAPI.getAll()
+export const put: RequestHandler = async ({ request }) => {
+    const data = await request.json() // or .json(), or .text(), etc
+    const id = data.id
+    console.log(data)
+    const res = await ExerciseAPI.update(id, data)
+    console.log(res)
+    return {}
+}
 
-    exercise.parameters = exercise.parameter_ids.map((x) =>
-        param_res.object.find((y) => y.id == x)
-    )
-
-    return {
-        status: status,
-        body: { exercise, error }
-    }
+export const del: RequestHandler = async ({ request }) => {
+    const id = await request.json()
+    await ExerciseAPI.del(id)
+    return {}
 }

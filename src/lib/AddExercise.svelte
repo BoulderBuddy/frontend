@@ -41,7 +41,7 @@
 
 <button
     on:click={() => getModal().open()}
-    class="absolute bottom-0 right-0 m-4 flex justify-center items-center p-2 rounded-full bg-indigo-500 hover:bg-indigo-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
+    class="m-4 flex justify-center items-center p-2 rounded-full bg-indigo-500 hover:bg-indigo-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
 >
     <Icon icon={baselineAdd} width="28" height="28" class="text-slate-100" />
     <p class="mx-1 hidden text-slate-100  sm:block">Add Exercise</p>

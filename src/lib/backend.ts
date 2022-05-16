@@ -74,6 +74,12 @@ export class BaseAPI<Model, Create, Update> {
     create(data): Promise<APIResponse<Model>> {
         return api('POST', `${this.path}`, data)
     }
+    update(id: number, data): Promise<APIResponse<Model>> {
+        return api('PUT', `${this.path}/${id}`, data)
+    }
+    del(id: number): Promise<APIResponse<Model>> {
+        return api('DELETE', `${this.path}/${id}`)
+    }
 }
 
 export const UserAPI = new BaseAPI<User, UserCreate, UserUpdate>('users')
