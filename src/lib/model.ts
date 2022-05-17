@@ -38,24 +38,9 @@ export interface HTTPErrorAlreadyExists {
  * @interface Exercise
  */
 export interface Exercise {
-    /**
-     *
-     * @type {string}
-     * @memberof Exercise
-     */
     name: string
-    /**
-     *
-     * @type {number}
-     * @memberof Exercise
-     */
     id: number
-    /**
-     *
-     * @type {Array<number>}
-     * @memberof Exercise
-     */
-    parameter_ids: Array<number>
+    parameters: Array<ExerciseParameter>
 }
 /**
  *
@@ -63,18 +48,8 @@ export interface Exercise {
  * @interface ExerciseCreate
  */
 export interface ExerciseCreate {
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseCreate
-     */
     name: string
-    /**
-     *
-     * @type {Array<number>}
-     * @memberof ExerciseCreate
-     */
-    parameter_ids: Array<number>
+    parameters: Array<ExerciseParameter>
 }
 /**
  *
@@ -88,12 +63,6 @@ export interface ExerciseParameter {
      * @memberof ExerciseParameter
      */
     name: string
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameter
-     */
-    unit_type: string
     /**
      *
      * @type {number}
@@ -113,12 +82,6 @@ export interface ExerciseParameterCreate {
      * @memberof ExerciseParameterCreate
      */
     name: string
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameterCreate
-     */
-    unit_type: string
 }
 /**
  *
@@ -132,29 +95,9 @@ export interface ExerciseParameterUpdate {
      * @memberof ExerciseParameterUpdate
      */
     name?: string
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameterUpdate
-     */
-    unit_type?: string
 }
-/**
- *
- * @export
- * @interface ExerciseUpdate
- */
+
 export interface ExerciseUpdate {
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseUpdate
-     */
     name?: string
-    /**
-     *
-     * @type {Array<number>}
-     * @memberof ExerciseUpdate
-     */
-    parameter_ids?: Array<number>
+    parameters?: Array<ExerciseParameter>
 }

@@ -13,12 +13,6 @@ export const get: RequestHandler = async ({}) => {
     const parameters = param_res.object as any
     const exercises = res.object as any
 
-    exercises.forEach((element) => {
-        element.parameters = element.parameter_ids.map((x) =>
-            parameters.find((y) => y.id == x)
-        )
-    })
-
     return {
         status: status,
         body: { exercises, parameters, error }

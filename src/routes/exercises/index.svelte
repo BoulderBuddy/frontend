@@ -10,7 +10,7 @@
 <script lang="ts">
     export let parameters
     export let exercises: ExerciseDisplay[]
-    let exerciseCreate = { name: null, parameter_ids: [] }
+    let exerciseCreate = { name: null, parameters: [] }
 
     async function handleApiCall(url, method, data?) {
         const response = await fetch(url, {

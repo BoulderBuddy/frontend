@@ -27,9 +27,9 @@
     <TestModal>
         <div class="flex flex-col">
             <input type="text" placeholder="Exercise name" bind:value={value.name} />
-            <select multiple bind:value={value.parameter_ids}>
+            <select multiple bind:value={value.parameters}>
                 {#each parameters as param}
-                    <option value={param.id}>
+                    <option value={param}>
                         {param.name}
                     </option>
                 {/each}
