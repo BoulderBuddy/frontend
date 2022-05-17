@@ -56,9 +56,9 @@
     on:focus={handleSelect}
     on:mouseleave={handleDeselect}
     on:blur={handleDeselect}
-    class="border-2 px-8 max-w-sm bg-white rounded-xl shadow-lg py-4 flex items-start space-y-0 space-x-6 hover:shadow-2xl transform hover:-translate-y-2 transition-transform ease-in duration-200"
+    class="border-2 max-w-full px-8 bg-white rounded-xl shadow-lg py-4 space-y-0 space-x-6 hover:shadow-2xl transform hover:-translate-y-2 transition-transform ease-in duration-200"
 >
-    <div class="text-left flex-1">
+    <div class="text-left flex items-start max-w-full">
         {#if isSelected}
             <div
                 class="absolute top-0 right-0 mr-3 space-x-3 text-xl sm:space-x-1 sm:text-base"
@@ -74,13 +74,22 @@
             </div>
         {/if}
 
-        <div class="">
-            <input
-                bind:value={exerciseEdit.name}
-                on:click={() => (isEditable = true)}
-                class="appearance-none bg-transparent text-lg text-black font-semibold focus:outline-none"
-                disabled={!isEditable}
-            />
+        <div class="max-w-full">
+            {#if isEditable}
+                <input
+                    type="text"
+                    bind:value={exerciseEdit.name}
+                    on:click={() => (isEditable = true)}
+                    class="break-normal appearance-none bg-transparent max-w-full text-lg text-black font-semibold focus:outline-none"
+                    disabled={!isEditable}
+                />
+            {:else}
+                <p
+                    class="appearance-none bg-transparent max-w-full text-lg text-black font-semibold"
+                >
+                    {exerciseEdit.name}
+                </p>
+            {/if}
 
             <div class="flex flex-row">
                 <div class="">
