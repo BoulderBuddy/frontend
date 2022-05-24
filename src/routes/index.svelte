@@ -1,5 +1,9 @@
 <script context="module" lang="ts">
-    import Exercise from '$lib/Exercise.svelte'
+    import Calendar from '$lib/Calendar.svelte'
+    import type { ExerciseDisplay } from '$lib/models/frontend'
+    import type { TrainingSessionDisplay } from '$lib/models/training_session'
+    import TrainingSession from '$lib/TrainingSession.svelte'
+
     export const prerender = true
 
     export async function load({ fetch }) {
@@ -7,23 +11,50 @@
             method: 'GET',
             headers: { Accept: 'application/json' }
         })
-        const { exercises } = await res.json()
+        const { exercises, parameters } = await res.json()
+
+        const res2 = await fetch('/sessions', {
+            method: 'GET',
+            headers: { Accept: 'application/json' }
+        })
+        const { sessions } = await res2.json()
 
         return {
-            props: { exercises }
+            props: { exercises, parameters, sessions }
         }
     }
 </script>
 
 <script lang="ts">
-    export let exercises
+    import { setContext } from 'svelte'
+    import { key, createSessionStore } from '$lib/session_store'
+
+    export let exercises: ExerciseDisplay[]
+    export let sessions: TrainingSessionDisplay[]
+
+    let store = createSessionStore()
+    store.init(new Date(), exercises, sessions)
+    setContext(key, store)
 </script>
 
 <svelte:head>
     <title>Home</title>
 </svelte:head>
 
-<div>Homepagina</div>
+<div class="flex justify-between p-6">
+    <div>
+        <Calendar />
+    </div>
+    {#await $store.activePromise}
+        <div>Loading...</div>
+    {:then}
+        <div class="border-l ">
+            <TrainingSession />
+        </div>
+    {:catch error}
+        <div>Grote probleem {error}</div>
+    {/await}
+</div>
 
 <style>
 </style>
