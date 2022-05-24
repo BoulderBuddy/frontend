@@ -8,7 +8,11 @@ import type {
     User,
     UserCreate,
     UserUpdate
-} from './model'
+} from './models/deprecated_backend'
+import type {
+    TrainingSessionDetailDisplay,
+    TrainingSessionDisplay
+} from './models/training_session'
 
 const base = 'http://backend:8000'
 
@@ -58,26 +62,26 @@ interface APIResponse<T> {
 //     delete: (url: string) => api('DELETE', url),
 // }
 
-export class BaseAPI<Model, Create, Update> {
+export class BaseAPI<Model, Create, Update, DetailModel = Model> {
     path: string
 
     constructor(path: string) {
         this.path = path
     }
 
-    get(id: number): Promise<APIResponse<Model>> {
+    get(id: number): Promise<APIResponse<DetailModel>> {
         return api('GET', `${this.path}/${id}`)
     }
     getAll(): Promise<APIResponse<Model[]>> {
-        return api('GET', `${this.path}`)
+        return api('GET', `${this.path}/`)
     }
-    create(data): Promise<APIResponse<Model>> {
-        return api('POST', `${this.path}`, data)
+    create(data): Promise<APIResponse<DetailModel>> {
+        return api('POST', `${this.path}/`, data)
     }
-    update(id: number, data): Promise<APIResponse<Model>> {
+    update(id: number, data): Promise<APIResponse<DetailModel>> {
         return api('PUT', `${this.path}/${id}`, data)
     }
-    del(id: number): Promise<APIResponse<Model>> {
+    del(id: number): Promise<APIResponse<DetailModel>> {
         return api('DELETE', `${this.path}/${id}`)
     }
 }
@@ -93,3 +97,9 @@ export const ParameterAPI = new BaseAPI<
     ExerciseParameterCreate,
     ExerciseParameterUpdate
 >('parameters')
+export const SessionsAPI = new BaseAPI<
+    TrainingSessionDisplay,
+    object,
+    object,
+    TrainingSessionDetailDisplay
+>('sessions')

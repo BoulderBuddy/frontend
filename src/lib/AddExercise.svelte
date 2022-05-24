@@ -2,13 +2,13 @@
     import Icon from '@iconify/svelte'
     import baselineAdd from '@iconify/icons-ic/baseline-add'
     import TestModal from '$lib/TestModal.svelte'
-    import type { ExerciseCreate, ExerciseParameter } from './model'
     import { browser } from '$app/env'
     import { createEventDispatcher } from 'svelte'
 </script>
 
 <script lang="ts">
     import { getModal } from '$lib/TestModal.svelte'
+    import type { ExerciseCreate, ExerciseParameter } from './models/deprecated_backend'
 
     export let value: ExerciseCreate
     export let parameters: ExerciseParameter[] = []

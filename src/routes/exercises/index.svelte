@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
     import Exercise from '$lib/Exercise.svelte'
-    import type { ExerciseDisplay } from '$lib/frontend_models'
     import AddExercise from '$lib/AddExercise.svelte'
     import { invalidate } from '$app/navigation'
+    import type { ExerciseDisplay } from '$lib/models/frontend'
 
     export const prerender = true
 </script>
@@ -10,7 +10,6 @@
 <script lang="ts">
     export let parameters
     export let exercises: ExerciseDisplay[]
-    let exerciseCreate = { name: null, parameters: [] }
 
     async function handleApiCall(url, method, data?) {
         const response = await fetch(url, {
@@ -47,11 +46,7 @@
 
 <div>
     <div class="fixed bottom-0 right-0 z-50">
-        <AddExercise
-            on:create={handleCreateEvent}
-            bind:value={exerciseCreate}
-            bind:parameters
-        />
+        <AddExercise on:create={handleCreateEvent} bind:parameters />
     </div>
 </div>
 <div

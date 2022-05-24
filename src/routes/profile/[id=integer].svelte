@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '$lib/model'
+    import type { User } from '$lib/models/deprecated_backend'
 
     export let user: User
 </script>

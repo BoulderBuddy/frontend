@@ -20,14 +20,14 @@ export const get: RequestHandler = async ({}) => {
 }
 
 export const post: RequestHandler = async ({ request }) => {
-    const data = await request.json() // or .json(), or .text(), etc
+    const data = await request.json()
 
     await ExerciseAPI.create(data)
     return {}
 }
 
 export const put: RequestHandler = async ({ request }) => {
-    const data = await request.json() // or .json(), or .text(), etc
+    const data = await request.json()
     const id = data.id
     console.log(data)
     const res = await ExerciseAPI.update(id, data)

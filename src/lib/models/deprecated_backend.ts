@@ -32,68 +32,28 @@ export interface HTTPErrorAlreadyExists {
     detail: string
     identifier?: any
 }
-/**
- *
- * @export
- * @interface Exercise
- */
+
 export interface Exercise {
     name: string
     id: number
     parameters: Array<ExerciseParameter>
 }
-/**
- *
- * @export
- * @interface ExerciseCreate
- */
+
 export interface ExerciseCreate {
     name: string
     parameters: Array<ExerciseParameter>
 }
-/**
- *
- * @export
- * @interface ExerciseParameter
- */
+
 export interface ExerciseParameter {
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameter
-     */
     name: string
-    /**
-     *
-     * @type {number}
-     * @memberof ExerciseParameter
-     */
     id: number
 }
-/**
- *
- * @export
- * @interface ExerciseParameterCreate
- */
+
 export interface ExerciseParameterCreate {
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameterCreate
-     */
     name: string
 }
-/**
- *
- * @export
- * @interface ExerciseParameterUpdate
- */
+
 export interface ExerciseParameterUpdate {
-    /**
-     *
-     * @type {string}
-     * @memberof ExerciseParameterUpdate
-     */
     name?: string
 }
 
