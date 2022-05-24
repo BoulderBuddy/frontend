@@ -10,8 +10,8 @@
     import { getModal } from '$lib/TestModal.svelte'
     import type { ExerciseCreate, ExerciseParameter } from './models/deprecated_backend'
 
-    export let value: ExerciseCreate
     export let parameters: ExerciseParameter[] = []
+    let value: ExerciseCreate
 
     const dispatch = createEventDispatcher()
 
