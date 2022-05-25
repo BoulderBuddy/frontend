@@ -1,10 +1,8 @@
 <script context="module" lang="ts">
-    import Calendar from '$lib/Calendar.svelte'
     import type { ExerciseDisplay } from '$lib/models/frontend'
     import type { TrainingSessionDisplay } from '$lib/models/training_session'
-    import TrainingSession from '$lib/TrainingSession.svelte'
-
-    export const prerender = true
+    import Calendar from '$lib/session/Calendar.svelte'
+    import TrainingSession from '$lib/session/TrainingSession.svelte'
 
     export async function load({ fetch }) {
         const res = await fetch('/exercises', {
@@ -27,7 +25,7 @@
 
 <script lang="ts">
     import { setContext } from 'svelte'
-    import { key, createSessionStore } from '$lib/session_store'
+    import { key, createSessionStore } from '$lib/session/session_store'
 
     export let exercises: ExerciseDisplay[]
     export let sessions: TrainingSessionDisplay[]

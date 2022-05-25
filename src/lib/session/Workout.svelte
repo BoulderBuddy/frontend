@@ -2,17 +2,16 @@
 </script>
 
 <script lang="ts">
+    import { getContext } from 'svelte'
+
     import type {
         ExerciseSetDisplay,
         SetDisplay,
         WorkoutDisplay
-    } from './models/training_session'
+    } from '$lib/models/training_session'
+    import { key, type TrainingSessionStoreWritable } from './session_store'
 
-    import { getContext } from 'svelte'
-    import { key, type TrainingSessionStore } from '$lib/session_store'
-    import type { Writable } from 'svelte/store'
-
-    let store = getContext<Writable<TrainingSessionStore>>(key)
+    let store = getContext<TrainingSessionStoreWritable>(key)
     {
         $store
     }

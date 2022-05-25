@@ -1,9 +1,8 @@
 <script lang="ts">
     import { getContext } from 'svelte'
-    import { key, type TrainingSessionStore } from '$lib/session_store'
-    import type { Writable } from 'svelte/store'
+    import { key, type TrainingSessionStoreWritable } from './session_store'
 
-    let store = getContext<Writable<TrainingSessionStore>>(key)
+    let store = getContext<TrainingSessionStoreWritable>(key)
 
     {
         $store

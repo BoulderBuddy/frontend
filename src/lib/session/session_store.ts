@@ -1,18 +1,9 @@
 import { get, writable } from 'svelte/store'
-import type { ExerciseDisplay } from './models/frontend'
+import type { ExerciseDisplay } from '$lib/models/frontend'
 import type {
     TrainingSessionDetailDisplay,
     TrainingSessionDisplay
-} from './models/training_session'
-
-export interface TrainingSessionStore {
-    active?: TrainingSessionDetailDisplay
-    exercises?: ExerciseDisplay[]
-    sessions?: TrainingSessionDisplay[]
-    activePromise?: Promise<{} | void>
-    upsertPromise?: Promise<{} | void>
-    currentDate?: Date
-}
+} from '$lib/models/training_session'
 
 function dateCompare(x, y) {
     var xDate = new Date(x)
@@ -146,4 +137,13 @@ function createSessionStore() {
     }
 }
 
+export interface TrainingSessionStore {
+    active?: TrainingSessionDetailDisplay
+    exercises?: ExerciseDisplay[]
+    sessions?: TrainingSessionDisplay[]
+    activePromise?: Promise<{} | void>
+    upsertPromise?: Promise<{} | void>
+    currentDate?: Date
+}
+export type TrainingSessionStoreWritable = ReturnType<typeof createSessionStore>
 export { key, createSessionStore }

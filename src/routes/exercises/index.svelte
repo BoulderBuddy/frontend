@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-    import Exercise from '$lib/Exercise.svelte'
-    import AddExercise from '$lib/AddExercise.svelte'
+    import Exercise from '$lib/exercise/Exercise.svelte'
+    import AddExercise from '$lib/exercise/AddExercise.svelte'
     import { invalidate } from '$app/navigation'
     import type { ExerciseDisplay } from '$lib/models/frontend'
 

@@ -10,11 +10,11 @@ import type {
     UserUpdate,
     HTTPErrorNotFound,
     HTTPValidationError
-} from './models/deprecated_backend'
+} from '$lib/models/deprecated_backend'
 import type {
     TrainingSessionDetailDisplay,
     TrainingSessionDisplay
-} from './models/training_session'
+} from '$lib/models/training_session'
 
 const base = 'http://backend:8000'
 

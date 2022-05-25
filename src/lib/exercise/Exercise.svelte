@@ -2,7 +2,7 @@
 </script>
 
 <script lang="ts">
-    import type { ExerciseDisplay } from './frontend_models'
+    import type { ExerciseDisplay } from '$lib/models/frontend'
     import { createEventDispatcher } from 'svelte'
 
     const dispatch = createEventDispatcher()

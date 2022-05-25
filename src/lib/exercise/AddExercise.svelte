@@ -1,17 +1,20 @@
 <script context="module" lang="ts">
     import Icon from '@iconify/svelte'
     import baselineAdd from '@iconify/icons-ic/baseline-add'
-    import TestModal from '$lib/TestModal.svelte'
+    import Modal from '$lib/Modal.svelte'
     import { browser } from '$app/env'
     import { createEventDispatcher } from 'svelte'
 </script>
 
 <script lang="ts">
-    import { getModal } from '$lib/TestModal.svelte'
-    import type { ExerciseCreate, ExerciseParameter } from './models/deprecated_backend'
+    import { getModal } from '$lib/Modal.svelte'
+    import type {
+        ExerciseCreate,
+        ExerciseParameter
+    } from '$lib/models/deprecated_backend'
 
     export let parameters: ExerciseParameter[] = []
-    let value: ExerciseCreate
+    let value: ExerciseCreate = { name: '', parameters: [] }
 
     const dispatch = createEventDispatcher()
 
@@ -24,7 +27,7 @@
 </script>
 
 {#if browser}
-    <TestModal>
+    <Modal>
         <div class="flex flex-col">
             <input type="text" placeholder="Exercise name" bind:value={value.name} />
             <select multiple bind:value={value.parameters}>
@@ -36,7 +39,7 @@
             </select>
             <button on:click|preventDefault={sendCreateEvent}>Create</button>
         </div>
-    </TestModal>
+    </Modal>
 {/if}
 
 <button
