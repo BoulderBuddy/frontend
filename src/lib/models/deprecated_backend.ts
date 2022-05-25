@@ -28,11 +28,6 @@ export interface ValidationError {
     msg: string
     type: string
 }
-export interface HTTPErrorAlreadyExists {
-    detail: string
-    identifier?: any
-}
-
 export interface Exercise {
     name: string
     id: number

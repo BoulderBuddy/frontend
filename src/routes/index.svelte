@@ -11,7 +11,7 @@
             method: 'GET',
             headers: { Accept: 'application/json' }
         })
-        const { exercises, parameters } = await res.json()
+        const { exercises } = await res.json()
 
         const res2 = await fetch('/sessions', {
             method: 'GET',
@@ -20,7 +20,7 @@
         const { sessions } = await res2.json()
 
         return {
-            props: { exercises, parameters, sessions }
+            props: { exercises, sessions }
         }
     }
 </script>
@@ -54,6 +54,20 @@
     {:catch error}
         <div>Grote probleem {error}</div>
     {/await}
+</div>
+
+<div>
+    {#if $store.upsertPromise}
+        {#await $store.upsertPromise}
+            <p>Eventjes lekker updaten</p>
+        {:then}
+            <p>Heel lekker geupdate</p>
+        {:catch error}
+            <div>Grote probleem {error}</div>
+        {/await}
+    {:else}
+        <p class=" text-red-700">Geen update</p>
+    {/if}
 </div>
 
 <style>

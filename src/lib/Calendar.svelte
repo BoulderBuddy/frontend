@@ -12,9 +12,17 @@
     $: internal = $store.currentDate.toLocaleDateString('en-CA')
 
     function valueAsDateConverter(node: HTMLInputElement) {
-        node.addEventListener('input', function () {
+        const handleChange = () => {
             store.handleDateInput(node.valueAsDate)
-        })
+        }
+
+        node.addEventListener('input', handleChange)
+
+        return {
+            destroy() {
+                node.removeEventListener('input', handleChange)
+            }
+        }
     }
 </script>
 

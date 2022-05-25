@@ -7,7 +7,9 @@ import type {
     ExerciseUpdate,
     User,
     UserCreate,
-    UserUpdate
+    UserUpdate,
+    HTTPErrorNotFound,
+    HTTPValidationError
 } from './models/deprecated_backend'
 import type {
     TrainingSessionDetailDisplay,
@@ -16,37 +18,50 @@ import type {
 
 const base = 'http://backend:8000'
 
-// const notFoundToStr = (error: HTTPErrorNotFound) => `${error.detail}`
-// const alreadyExistsToStr = (error: HTTPErrorAlreadyExists) => `${error.detail}: ${error.identifier}`
-// const validationErrorToStr = (error: HTTPValidationError) =>  `Ik haat mn leven ${error.detail}`
-// const fallbackErrorToStr = (error: string, response: Response) => `${response.status}-${response.statusText} : ${error}`
+const notFoundToStr = (error: HTTPErrorNotFound) => `${error.detail}`
+const validationErrorToStr = (error: HTTPValidationError) => {
+    return `${JSON.stringify(error.detail)}`
+}
+const fallbackErrorToStr = (error: string, response: Response) =>
+    `${response.status}-${response.statusText} : ${error}`
 
-// const lookup = {
-//     400: alreadyExistsToStr,
-//     404: notFoundToStr,
-//     422: validationErrorToStr,
-//     0: null
-// }
+const lookup = {
+    404: notFoundToStr,
+    422: validationErrorToStr,
+    0: null
+}
 
 async function api<T>(
     method: string,
     url: string,
     data?: Record<string, unknown>
 ): Promise<APIResponse<T>> {
-    var res = await fetch(`${base}/${url}`, {
+    return fetch(`${base}/${url}`, {
         method,
         headers: {
             'content-type': 'application/json'
         },
         body: data && JSON.stringify(data)
-    })
-    var json = await res.json()
+    }).then((r) => {
+        let r_clone = r.clone()
 
-    if (res.ok) {
-        return { object: json, response: res }
-    } else {
-        return { error: json, response: res }
-    }
+        if (r.ok) {
+            return r.json().then((o) => {
+                return { object: o, response: r_clone }
+            })
+        } else {
+            return r.json().then((error) => {
+                const errorFunc = lookup[r_clone.status]
+                let errorMsg = fallbackErrorToStr(error, r_clone)
+
+                if (errorFunc) {
+                    errorMsg = errorFunc(error)
+                }
+
+                return { error: errorMsg, response: r_clone }
+            })
+        }
+    })
 }
 
 interface APIResponse<T> {
@@ -54,13 +69,6 @@ interface APIResponse<T> {
     object?: T
     response: Response
 }
-
-// const requests = {
-//     get: (url: string) => api('GET', url),
-//     post: (url: string, body: {}) => api('POST', url, body),
-//     put: (url: string, body: {}) =>  api('PUT', url, body),
-//     delete: (url: string) => api('DELETE', url),
-// }
 
 export class BaseAPI<Model, Create, Update, DetailModel = Model> {
     path: string
@@ -77,6 +85,9 @@ export class BaseAPI<Model, Create, Update, DetailModel = Model> {
     }
     create(data): Promise<APIResponse<DetailModel>> {
         return api('POST', `${this.path}/`, data)
+    }
+    upsert(data): Promise<APIResponse<DetailModel>> {
+        return api('PUT', `${this.path}/`, data)
     }
     update(id: number, data): Promise<APIResponse<DetailModel>> {
         return api('PUT', `${this.path}/${id}`, data)

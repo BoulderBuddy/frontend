@@ -10,6 +10,7 @@ export interface TrainingSessionStore {
     exercises?: ExerciseDisplay[]
     sessions?: TrainingSessionDisplay[]
     activePromise?: Promise<{} | void>
+    upsertPromise?: Promise<{} | void>
     currentDate?: Date
 }
 
@@ -21,7 +22,19 @@ function dateCompare(x, y) {
     return xDate.valueOf() === yDate.valueOf()
 }
 
+function checkResponse(r) {
+    if (!r.ok) {
+        return r.json().then((error) => {
+            const errMsg = JSON.stringify(error)
+            throw new Error(errMsg)
+        })
+    }
+    return r.json()
+}
+
 const key = Symbol()
+
+const SESSION_ENDPOINT = '/sessions'
 
 function createSessionStore() {
     const { subscribe, set, update } = writable<TrainingSessionStore>({})
@@ -44,28 +57,25 @@ function createSessionStore() {
         let matched_session = sessions.find((x) => dateCompare(x.date, date))
 
         if (matched_session) {
-            const response = fetch(`/sessions/${matched_session.id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            return response
-                .then((r) => {
-                    if (!r.ok) {
-                        throw Error('Paniek')
+            const response = fetch(
+                `${SESSION_ENDPOINT}/${matched_session.id}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                    return r.json()
+                }
+            )
+
+            return response.then(checkResponse).then((body) => {
+                update(({ active, ...state }) => {
+                    return { ...state, active: body.session }
                 })
-                .then((body) => {
-                    update(({ active, ...state }) => {
-                        return { ...state, active: body.session }
-                    })
-                })
+            })
         } else {
             return new Promise<void>((resolve) => {
                 setTimeout(() => {
+                    // Why is this necessary ???
                     let session = { date: date, workouts: [] }
                     update(({ active, ...state }) => {
                         return { ...state, active: session }
@@ -76,17 +86,54 @@ function createSessionStore() {
         }
     }
 
-    function handleDateInput(date) {
-        update(({ currentDate, sessions, activePromise: test, ...state }) => {
-            let newActive = getActivePromise(date, sessions)
+    function postSession(active: TrainingSessionDetailDisplay) {
+        if (
+            (active.comment && active.comment.length > 0) ||
+            active.workouts.length > 0
+        ) {
+            return fetch(`${SESSION_ENDPOINT}/`, {
+                method: 'PUT',
+                headers: {
+                    accept: 'application/json'
+                },
+                body: active && JSON.stringify(active)
+            })
+                .then(checkResponse)
+                .then((r) => {
+                    update(({ sessions, ...state }) => {
+                        let hit = sessions.find((s) => s.id == r.session.id)
+                        if (!hit) {
+                            sessions = [...sessions, r.session]
+                        }
+                        return { ...state, sessions: sessions }
+                    })
+                })
+        }
+    }
 
-            return {
-                ...state,
-                currentDate: date,
-                sessions: sessions,
-                activePromise: newActive
+    function handleDateInput(date) {
+        update(
+            ({
+                currentDate,
+                sessions,
+                activePromise,
+                active,
+                upsertPromise,
+                ...state
+            }) => {
+                let newActive = getActivePromise(date, sessions)
+                let newUpsertPromise = postSession(active)
+
+                return {
+                    ...state,
+                    active: active,
+                    currentDate: date,
+                    sessions: sessions,
+                    activePromise: newActive,
+                    upsertPromise: newUpsertPromise
+                }
             }
-        })
+        )
     }
 
     return {
